@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  employee_code: MyString
+  date_time: 2014-08-25
+  actual_working_hrs: 1
+  actual_workingMin: 1
+  actual_ondesk_time: 9.99
+  office_time: 9.99
+  comments: MyText
+  references: 
+
+two:
+  employee_code: MyString
+  date_time: 2014-08-25
+  actual_working_hrs: 1
+  actual_workingMin: 1
+  actual_ondesk_time: 9.99
+  office_time: 9.99
+  comments: MyText
+  references: 

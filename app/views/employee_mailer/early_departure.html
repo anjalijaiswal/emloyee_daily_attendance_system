@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    
+    <h1><%= "Hello #{@per_punch[0][:name]} (#{@per_punch[0][:cardno]}) " %></h1>
+
+    <p><%= "You have left early for the day #{Date.yesterday}.Here are your details:"%><br>
+      <br><br>
+      <table border="1">
+        <tr>
+          <th>Block</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Minutes spend in office</th>
+          
+        </tr>
+       <% @per_punch.each do |emp| %>
+          <tr>
+            <%#= Rails.logger.ap emp[:id_no] .................... %>
+              <% if ['08','05'].include?emp[:id_no] %>
+                <% block="Main Building" %>
+              <% elsif ['14','13'].include?emp[:id_no]%>
+                <%  block="Server Room Main Building" %>
+              <% elsif ['12','06'].include?emp[:id_no]%>
+                <%  block="A & B Block"%>
+              <% elsif ['04','07'].include?emp[:id_no]%>
+                <%  block ="C Block" %>
+              <% elsif ['09','03'].include?emp[:id_no]%>
+                <%  block ="Virtual Office"%>
+              <% elsif ['10','11'].include?emp[:id_no]%>
+                <%  block ="SERVER ROOM A & B block"%>
+              <%else%>
+              <% block=nil%>
+              <% end %>
+              <td><%= "#{block}"%></td>
+              <td><%= emp[:in] %></td>
+              <td><%= emp[:out]%></td>
+              <td><%= emp[:diff].round(2) if emp[:diff].present? %></td>
+          </tr>
+        <% end %> <br>
+        <tr><%= "Total Difference in Hr = #{@total.round(2)}" %> </tr>
+      </table>
+    </p>
+    <br><br>
+    <p>
+     For any Queries plz contact : Khushboo shrivastav
+    </p>
+   
+  </body>
+</html>
