@@ -1,16 +1,25 @@
 class EmployeesController < ApplicationController
+  
   def index
-  end
 
-  def daily_attendence
+  end
+  def show
+    @employee=TempDatum.where(:cardno=>params[:cardno],:officepunch=>params[:officepunch])
+
+  end
+  def daily_attendence(args)
+    #raise args.inspect
+    
     punch={}
     
     # will fetch record of all employess present for yesterday
-    @employees_present =TempDatum.where(:officepunch=>(Date.yesterday.midnight+6.hours .. Date.today.midnight+5.hours+59.minutes+59.seconds))
+    @employees_present = args#.flatten#TempDatum.where(:officepunch=>(Date.yesterday.midnight+6.hours .. Date.today.midnight+5.hours+59.minutes+59.seconds))
+    puts "<<<<<<<<<<<<<<<<<Its running  #{@employees_present}>>>>>>>>>>>>>>>>>>>>>>>>"
     @cardno=@employees_present.map{ |e| e.cardno}.uniq
     @cardno_cln=@cardno.select{|v|v=~/["LNO"]/}
     @cardno=@cardno-@cardno_cln
     @cardno.each do |cardno|   
+        
         #initializing values
         total_diff=0.0
         diff=[]
@@ -27,14 +36,9 @@ class EmployeesController < ApplicationController
           per_punch=[{:cardno=>cardno,:name=>nil,:in=>nil,:out=>nil,:id_no=>nil,:diff=>nil}]
         end
         
-        
         i=0  
         while(i<(@x.size-1))
-          
-          #puts "#{@x[i].officepunch} ________#{@x[i].id_no}________________________________________"
-          #BLOCK A AND B 12-IN 06 -OUT
           if(@x[i].id_no.strip=='12') && (@x[i+1].id_no.strip=='06')
-
             intime[i]=@x[i].officepunch
             outtime[i]=@x[i+1].officepunch
             diff[i]=(outtime[i]-intime[i])/60
@@ -44,7 +48,6 @@ class EmployeesController < ApplicationController
           
           #VIRTUAL OFFICE BLOCK 09-IN 03-OUT
           elsif(@x[i].id_no.strip=='09') && (@x[i+1].id_no.strip=='03')
-
             intime[i]=@x[i].officepunch
             outtime[i]=@x[i+1].officepunch
             diff[i]=(outtime[i]-intime[i])/60
@@ -134,10 +137,9 @@ class EmployeesController < ApplicationController
             diff[i]=0.0
             total_diff=total_diff+diff[i] 
             i=i+1 
-          end
-        
+          end       
         end   
-        if
+        if(total_diff<510)
           EmployeeMailer.early_departure(per_punch,total_diff).deliver 
         end 
     end
